@@ -1,18 +1,30 @@
-import org.apache.spark.sql.SparkSession
+import org.apache.spark._
+import org.apache.spark.mllib.linalg.{Vector}
+import org.apache.spark.mllib.linalg.distributed.{RowMatrix}
+import org.apache.spark.rdd.RDD
+import org.apache.spark.mllib.random.RandomRDDs
 
 object SparkDemo {
+  import Util._
+
   def main(args: Array[String]){
-    val logFile = "/opt/spark/README.md"
 
-    val spark = SparkSession.builder.appName("Spark Demo").config("spark.master", "local").getOrCreate()
+    val conf = new SparkConf()
+      .setMaster("local[*]")
+      .setAppName("SquareMatrixMultiply")
 
-    val logData = spark.read.textFile(logFile).cache()
+    val sc = new SparkContext(conf)
 
-    val numAs = logData.filter(line => line.contains("a")).count()
-    val numBs = logData.filter(line => line.contains("b")).count()
+    val n = args(0).toInt
 
-    println(s"Lines with a: $numAs, Lines with b: $numBs")
+    val dm  = randomDenseMatrix(n, n)
+    val dv = toDensityVector(dm)
+    val rdd: RDD[Vector] = sc.parallelize(dv)
 
-    spark.stop()
+    val b  = randomDenseMatrix(n, n) // This matrix exists in local memory
+    val a = new RowMatrix(rdd, n, n) // This matrix is an RDD
+
+    // Multiply A by B
+    val resultRDD = time("\n\n\nMatrix Multiply")(a.multiply(b))
   }
 }
