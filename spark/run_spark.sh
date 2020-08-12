@@ -1,1 +1,1 @@
-spark-submit --class "SparkDemo" --master local[*] target/scala-2.12/spark-demo_2.12-1.0.jar $1
+spark-submit --class "SparkDemo" --master local[*] target/scala-2.12/spark-demo_2.12-1.0.jar $1 | grep "Matrix Multiply"

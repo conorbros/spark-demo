@@ -11,14 +11,16 @@ object SparkDemo {
 
     val conf = new SparkConf()
       .setMaster("local[*]")
-      .setAppName("SquareMatrixMultiply")
+      .setAppName("SparkDemo")
 
     val sc = new SparkContext(conf)
+    sc.setLogLevel("ERROR")
 
     val n = args(0).toInt
 
-    val dm  = randomDenseMatrix(n, n)
+    val dm = randomDenseMatrix(n, n)
     val dv = toDensityVector(dm)
+    // Create an RDD using a local collection
     val rdd: RDD[Vector] = sc.parallelize(dv)
 
     val b  = randomDenseMatrix(n, n) // This matrix exists in local memory

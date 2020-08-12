@@ -12,7 +12,7 @@ object Util {
     val r     = f
     val end   = System.nanoTime
     val time  = (end - start) / 1e6
-    logger.println(descr + ": = " + time + "ms\n\n\n")
+    logger.println(descr + ": " + time + "ms\n\n\n")
     r
   }
 

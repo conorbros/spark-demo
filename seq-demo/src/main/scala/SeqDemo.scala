@@ -8,14 +8,18 @@ object SeqDemo {
     val r     = f
     val end   = System.nanoTime
     val time  = (end - start) / 1e6
-    println(descr + ": = " + time + "ms\n")
+    println(descr + ": " + time + "ms")
     r
   }
 
   def matrix_multiply(a: Array[Array[Int]], b: Array[Array[Int]], c: Array[Array[Int]], n: Int): Array[Array[Int]] = {
     for(i <- 0 to n-1){
       for(j <- 0 to n-1){
-        c(i)(j) = a(i)(j) * b(i)(j);
+        var sum = 0;
+        for(k <- 0 to n-1){
+          sum = sum + a(i)(k) * b(k)(j);
+        }
+        c(i)(j) = sum;
       }
     }
     return c
@@ -38,6 +42,6 @@ object SeqDemo {
       }
     }
 
-    matrix_c = time("\nMatrix Multiply")(matrix_multiply(matrix_a, matrix_b, matrix_c, n));
+    matrix_c = time("Matrix Multiply")(matrix_multiply(matrix_a, matrix_b, matrix_c, n));
   }
 }
